@@ -1,0 +1,60 @@
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def sortedListToBST(head: ListNode) -> TreeNode:
+    values = []
+    while head:
+        values.append(head.val)
+        head = head.next
+    
+    def sortedArrayToBST(left: int, right: int) -> TreeNode:
+        if left > right:
+            return None
+        
+        mid = (left + right) 
+        node = TreeNode(values[mid])
+        node.left = sortedArrayToBST(left, mid - 1)
+        node.right = sortedArrayToBST(mid + 1, right)
+        return node
+    
+    return sortedArrayToBST(0, len(values) - 1)
+
+from collections import deque
+
+def printLevelOrder(root: TreeNode):
+    if not root:
+        return []
+    
+    result = []
+    queue = deque([root])
+    
+    while queue:
+        node = queue.popleft()
+        if node:
+            result.append(node.val)
+            queue.append(node.left)
+            queue.append(node.right)
+        else:
+            result.append(None)
+    
+    while result and result[-1] is None:
+        result.pop()
+    
+    return result
+
+head = ListNode(-10)
+head.next = ListNode(-3)
+head.next.next = ListNode(0)
+head.next.next.next = ListNode(5)
+head.next.next.next.next = ListNode(9)
+
+bst_root = sortedListToBST(head)
+print(printLevelOrder(bst_root))
